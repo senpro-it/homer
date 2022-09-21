@@ -46,7 +46,7 @@ in
         "http:"   \
         "  routers:"   \
         "    homer:" \
-        "      rule: \"Host(\`${config.senpro.oci-containers.homer.traefik.fqdn}\`)\"" \
+        "      rule: \"Host(\`${cfg.traefik.fqdn}\`)\"" \
         "      service: \"homer\"" \
         "      entryPoints:" \
         "      - \"https2-tcp\"" \
