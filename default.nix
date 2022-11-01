@@ -29,7 +29,7 @@ in
           "--net=proxy"
         ];
         volumes = [
-          "/srv/podman/homer/volume.d/homer:/www/assets"
+          "homer:/www/assets"
         ];
         environment = {
           INIT_ASSETS = "0";
@@ -38,9 +38,6 @@ in
       };
     };
     system.activationScripts = {
-      makeHomerBindVolDirectories = ''
-        mkdir -p /srv/podman/homer/volume.d/homer
-      '';
       makeHomerTraefikConfiguration = ''
         printf '%s\n' \
         "http:"   \
