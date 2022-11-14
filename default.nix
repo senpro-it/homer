@@ -37,25 +37,25 @@ in
         autoStart = true;
       };
     };
-    system.activationScripts = {
-      makeHomerTraefikConfiguration = ''
-        printf '%s\n' \
-        "http:"   \
-        "  routers:"   \
-        "    homer:" \
-        "      rule: \"Host(\`${cfg.traefik.fqdn}\`)\"" \
-        "      service: \"homer\"" \
-        "      entryPoints:" \
-        "      - \"https2-tcp\"" \
-        "      tls: true" \
-        "  services:" \
-        "    homer:" \
-        "      loadBalancer:" \
-        "        passHostHeader: true" \
-        "        servers:" \
-        "        - url: \"http://homer:8080\"" \
-        > /srv/podman/traefik/volume.d/traefik/conf.d/homer.yml
-      '';
+    systemd.services = {
+      "podman-homer" = {
+        postStart = ''
+          ${pkgs.coreutils-full}/bin/printf '%s\n' "http:" \
+          "  routers:" \
+          "    homer:" \
+          "      rule: \"Host(\`${cfg.traefik.fqdn}\`)\"" \
+          "      service: \"homer\"" \
+          "      entryPoints:" \
+          "      - \"https2-tcp\"" \
+          "      tls: true" \
+          "  services:" \
+          "    homer:" \
+          "      loadBalancer:" \
+          "        passHostHeader: true" \
+          "        servers:" \
+          "        - url: \"http://homer:8080\"" > $(${pkgs.podman}/bin/podman volume inspect traefik --format "{{.Mountpoint}}")/conf.d/apps-homer.yml
+        '';
+      };
     };
   };
 
